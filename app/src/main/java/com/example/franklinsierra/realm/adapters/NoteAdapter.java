@@ -53,8 +53,8 @@ public class NoteAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(layout, null);
             vh = new ViewHolder();
-            vh.description = (TextView) convertView.findViewById(R.id.textViewNotes);
-            vh.date = (TextView) convertView.findViewById(R.id.textViewDate);
+            vh.description = (TextView) convertView.findViewById(R.id.textNoteContent);
+            vh.date = (TextView) convertView.findViewById(R.id.textNoteDate);
             //guardo el estado del vh
             convertView.setTag(vh);
         } else {
@@ -62,12 +62,12 @@ public class NoteAdapter extends BaseAdapter {
             vh = (ViewHolder) convertView.getTag();
         }
 
-        Note currentNote = notes.get(position);
-        vh.description.setText(currentNote.getDescription());
-        //para la fecha
+        Note note = notes.get(position);
+
+        vh.description.setText(note.getDescription());
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        String dateString = df.format(currentNote.getDateCreated());
-        vh.date.setText(dateString);
+        String date = df.format(note.getDateCreated());
+        vh.date.setText(date);
 
         return convertView;
     }

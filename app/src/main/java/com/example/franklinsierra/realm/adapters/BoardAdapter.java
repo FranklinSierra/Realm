@@ -53,7 +53,7 @@ public class BoardAdapter extends BaseAdapter {
         if(convertView==null){
 
             //quiere decir que es la primer vez que se cargan los elementos
-            convertView=LayoutInflater.from(context).inflate(R.layout.list_view_board_item,null);
+            convertView=LayoutInflater.from(context).inflate(layout,null);
             vh=new ViewHolder();
             vh.title=(TextView)convertView.findViewById(R.id.textViewTitle);
             vh.notes=(TextView)convertView.findViewById(R.id.textViewNotes);
@@ -80,7 +80,7 @@ public class BoardAdapter extends BaseAdapter {
         vh.notes.setText(textForNotes);
 
         //le damos un formato a la fecha
-        DateFormat dateFormat=new SimpleDateFormat("dd-MM-YYYY");
+        DateFormat dateFormat=new SimpleDateFormat("dd-MM-yyyy");
         String dateString=dateFormat.format(board.getDateCreated());
         vh.date.setText(dateString);
 

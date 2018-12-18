@@ -35,7 +35,7 @@ public class BoardActivity extends AppCompatActivity implements AdapterView.OnIt
     private Realm realm;
     private ListView listView;
     private RealmResults<Board> boards;
-    private BoardAdapter adapter;
+    private BoardAdapter adapterBoard;
 
 
     @Override
@@ -47,6 +47,7 @@ public class BoardActivity extends AppCompatActivity implements AdapterView.OnIt
         realm = Realm.getDefaultInstance();
 
 
+
         //consulta en la base de datos sobre todos los registros de la tabla Board
         boards = realm.where(Board.class).findAll();
 
@@ -54,9 +55,9 @@ public class BoardActivity extends AppCompatActivity implements AdapterView.OnIt
         //Notifica a el adaptador cuando se crea o se elimina un registro
         boards.addChangeListener(this);
 
-        adapter = new BoardAdapter(boards, this, R.layout.list_view_board_item);
+        adapterBoard = new BoardAdapter(boards, this, R.layout.list_view_board_item);
         listView = (ListView) findViewById(R.id.listViewBoard);
-        listView.setAdapter(adapter);
+        listView.setAdapter(adapterBoard);
         //cuando hagan click en el item para pasar al otro activity
         listView.setOnItemClickListener(this);
         fab = (FloatingActionButton) findViewById(R.id.FABaddBoard);
@@ -268,6 +269,6 @@ public class BoardActivity extends AppCompatActivity implements AdapterView.OnIt
 
     @Override
     public void onChange(RealmResults<Board> boards) {
-        adapter.notifyDataSetChanged();
+        adapterBoard.notifyDataSetChanged();
     }
 }

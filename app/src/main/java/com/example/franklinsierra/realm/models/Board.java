@@ -25,7 +25,7 @@ public class Board extends RealmObject {
     //PREGUNTAR COMO SE MANEJAN LAS RELACIONES ENTRE LAS TABLAS (CLAVES FORANEAS)
 
     //como una pizarra y las notas tienen relacion 1:m, creo la lista de las notas
-    RealmList<Note> notes;
+    private RealmList<Note> notes;
 
     //Creo los constructores
     public Board(){}

@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -26,14 +25,12 @@ import io.realm.RealmChangeListener;
 import io.realm.RealmList;
 import io.realm.RealmResults;
 
-//le implemento RealmChangeListener<Board> por que es el board el que va a cambiar
-
 public class NoteActivity extends AppCompatActivity implements RealmChangeListener<Board> {
 
     //propiedades basicas
 
     private ListView listView;
-    private NoteAdapter adapter;
+    private NoteAdapter adapterNote;
     private RealmList<Note> notes;
     private Realm realm;
     private FloatingActionButton fab;
@@ -51,31 +48,33 @@ public class NoteActivity extends AppCompatActivity implements RealmChangeListen
         //tomo el id del BoardActivity
         if (getIntent().getExtras() != null) {
             boardId = getIntent().getExtras().getInt("id");
-            //consulto el board que tiene asociado el id
-            board = realm.where(Board.class).equalTo("id", boardId).findFirst();
-            //para que pueda ir refrescarse el adaptador
-            board.addChangeListener(this);
-            //obtengo las notas de esa board
-            notes = board.getNotes();
-
-            //ponemos el titulo en el accion bar del activity (opcional)
-            this.setTitle(board.getTitle());
-
-            //ubicamos por id lo basico para desplegar
-            fab = (FloatingActionButton) findViewById(R.id.FABaddNote);
-            listView = (ListView) findViewById(R.id.listNote);
-            adapter = new NoteAdapter(this, notes, R.layout.list_view_note_item);
-
-            listView.setAdapter(adapter);
-
-            //defino el comportamiento del fab
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showAlertCreatingNote("Add a new note", "Type a new note for " + board.getTitle() + ".");
-                }
-            });
         }
+        //consulto el board que tiene asociado el id
+        board = realm.where(Board.class).equalTo("id", boardId).findFirst();
+        //para que pueda ir refrescarse el adaptador
+        board.addChangeListener(this);
+        //obtengo las notas de esa board
+        notes = board.getNotes();
+
+
+        //ponemos el titulo en el accion bar del activity (opcional)
+        this.setTitle(board.getTitle());
+
+        //ubicamos por id lo basico para desplegar
+        fab = (FloatingActionButton) findViewById(R.id.FABaddNote);
+        adapterNote = new NoteAdapter(this, notes, R.layout.list_view_note_item);
+        listView = (ListView) findViewById(R.id.listNote);
+
+        listView.setAdapter(adapterNote);
+
+        //defino el comportamiento del fab
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAlertCreatingNote("Add a new note", "Type a new note for " + board.getTitle() + ".");
+            }
+        });
+
 
         registerForContextMenu(listView);
 
@@ -184,10 +183,10 @@ public class NoteActivity extends AppCompatActivity implements RealmChangeListen
     private void createNewNote(String note) {
         //comienzo la transaccion
         realm.beginTransaction();
-        Note _note = new Note(note);
-        realm.copyToRealm(_note);
+        Note Newnote = new Note(note);
+        realm.copyToRealm(Newnote);
         //hago que se relacione la nota con la pizarra
-        board.getNotes().add(_note);
+        board.getNotes().add(Newnote);
         //cierro la transaccion
         realm.commitTransaction();
     }
@@ -210,7 +209,6 @@ public class NoteActivity extends AppCompatActivity implements RealmChangeListen
         board.getNotes().deleteAllFromRealm();
         realm.commitTransaction();
     }
-
 
 
     // ** opcion de eliminar todas las notas de la pizarra **//
@@ -245,7 +243,7 @@ public class NoteActivity extends AppCompatActivity implements RealmChangeListen
                 deleteNote(notes.get(info.position));
                 return true;
             case R.id.edit_note:
-                showAlertEditingNote("Edit your note","Type your new note",notes.get(info.position));
+                showAlertEditingNote("Edit your note", "Type your new note", notes.get(info.position));
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -254,8 +252,6 @@ public class NoteActivity extends AppCompatActivity implements RealmChangeListen
 
     @Override
     public void onChange(Board board) {
-        adapter.notifyDataSetChanged();
+        adapterNote.notifyDataSetChanged();
     }
 }
-
-

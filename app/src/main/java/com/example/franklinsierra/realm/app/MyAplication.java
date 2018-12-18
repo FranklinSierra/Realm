@@ -22,11 +22,12 @@ import io.realm.RealmObject;
 import io.realm.RealmResults;
 
 //LA EXTION DE APPLICATION PARA QUE SE EJECUTE ANTES DEL MAIN (BOARD ACTIVITY)
-// ES NECESARIO ESPECIFICARLO TAMBIEN EN EL MANIFEST PONIENDO EL android:name
+
+// **** ES NECESARIO ESPECIFICARLO TAMBIEN EN EL MANIFEST PONIENDO EL android:name  ****    //
 
 public class MyAplication extends Application {
 
-    //Metodos que autoincrementan las llaves primarias
+    //Metodos que autoincrementan las llaves primarias (esto se hace para tantas tablas como se tengan)
     public static AtomicInteger BoardId =new AtomicInteger();
     public static AtomicInteger NoteId=new AtomicInteger();
 
@@ -86,6 +87,8 @@ public class MyAplication extends Application {
         Realm.setDefaultConfiguration(config);
     }
 
+
+    //  ++++    METODO PARA CONOCER EL VALOR MAXIMO QUE LLEVA CADA ID DE CUALQUIER CLASE    ++++    //
     //La T significa cualquier clase
     private <T extends RealmObject> AtomicInteger getIdByTable(Realm realm,Class<T> anyClass){
 
@@ -95,6 +98,7 @@ public class MyAplication extends Application {
             //quiere decir que hay al menos un registro
             return new AtomicInteger(results.max("id").intValue());
         }else{
+            //como no se le pasa nada quiere decir que es cero
             return new AtomicInteger();
         }
     }
